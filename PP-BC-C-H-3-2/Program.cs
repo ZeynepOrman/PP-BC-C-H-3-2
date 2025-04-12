@@ -1,6 +1,6 @@
 using FluentValidation.AspNetCore;
 using FluentValidation;
-using PP_Project_Zeynep_O.Validators;
+using PP_BC_C_H_3_2.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-using PP_Project_Zeynep_O.Models;
+using PP_BC_C_H_3_2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +20,12 @@ builder.Services.AddControllers();
 
 // FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<EmployeeValidator>();
-builder.Services.AddScoped<IValidator<Employee>, EmployeeValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<GetByIdEmployeeValidator>();
+// Replace this line:
+//////builder.Services.AddScoped<IValidator<Employee>, GetByIdEmployeeValidator>();
 
+// With this line:
+builder.Services.AddScoped<IValidator<int>, GetByIdEmployeeValidator>();
 // Swagger
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

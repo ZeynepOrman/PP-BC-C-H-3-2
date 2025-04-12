@@ -14,6 +14,11 @@ namespace PP_Project_Zeynep_O.Controllers
         public EmployeeController(IValidator<Employee> validator)
         {
             _validator = validator;
+
+            // Add dummy data
+            employees.Add(new Employee { Id = 1, Name = "John Doe", Email = "john.doe@example.com", AccountNumber = "123456", Age = 30 });
+            employees.Add(new Employee { Id = 2, Name = "Jane Smith", Email = "jane.smith@example.com", AccountNumber = "654321", Age = 25 });
+            employees.Add(new Employee { Id = 3, Name = "Alice Johnson", Email = "alice.johnson@example.com", AccountNumber = "789012", Age = 28 });
         }
 
         [HttpGet]
@@ -71,32 +76,6 @@ namespace PP_Project_Zeynep_O.Controllers
 
             employees.Remove(employee);
             return NoContent();
-        }
-
-        [HttpPatch("{id}")]
-        public IActionResult Patch(int id, [FromBody] Employee employee)
-        {
-            var existingEmployee = employees.FirstOrDefault(e => e.Id == id);
-            if (existingEmployee == null)
-                return NotFound();
-
-            if (!string.IsNullOrEmpty(employee.Name))
-                existingEmployee.Name = employee.Name;
-
-            if (!string.IsNullOrEmpty(employee.Email))
-                existingEmployee.Email = employee.Email;
-
-            if (employee.Age > 0)
-                existingEmployee.Age = employee.Age;
-
-            return NoContent();
-        }
-
-        [HttpGet("list")]
-        public IActionResult List([FromQuery] string name)
-        {
-            var filteredEmployees = employees.Where(e => e.Name.Contains(name)).ToList();
-            return Ok(filteredEmployees);
         }
     }
 }

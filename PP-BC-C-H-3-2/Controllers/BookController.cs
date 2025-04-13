@@ -10,13 +10,13 @@ namespace PP_BC_C_H_3_2.Controllers
     {
         private static List<Book> books = new List<Book>();
         private readonly IValidator<int> _getByIdValidator;
-        private readonly IValidator<Book> _createValidator;
+        private readonly IValidator<CreateBook> _createValidator;
         private readonly IValidator<Book> _updateValidator;
         private readonly IValidator<int> _deleteValidator;
 
         public BookController(
             IValidator<int> getByIdValidator,
-            IValidator<Book> createValidator,
+            IValidator<CreateBook> createValidator,
             IValidator<Book> updateValidator,
             IValidator<int> deleteValidator)
         {
@@ -26,9 +26,9 @@ namespace PP_BC_C_H_3_2.Controllers
             _deleteValidator = deleteValidator;
 
             // Add dummy data
-            books.Add(new Book { Id = 1, Name = "John Doe", Email = "john.doe@example.com", AccountNumber = "123456", Age = 30 });
-            books.Add(new Book { Id = 2, Name = "Jane Smith", Email = "jane.smith@example.com", AccountNumber = "654321", Age = 25 });
-            books.Add(new Book { Id = 3, Name = "Alice Johnson", Email = "alice.johnson@example.com", AccountNumber = "789012", Age = 28 });
+            books.Add(new Book { BookId = 1, GenreId = 101, Title = "Jane Eyre" });
+            books.Add(new Book { BookId = 2, GenreId = 102, Title = "Güliverin Seyahatleri" });
+            books.Add(new Book { BookId = 3, GenreId = 103, Title = "Dünyanın Merkezine Yolculuk" });
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace PP_BC_C_H_3_2.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var book = books.FirstOrDefault(e => e.Id == id);
+            var book = books.FirstOrDefault(e => e.BookId == id);
             if (book == null)
                 return NotFound();
 
@@ -54,28 +54,21 @@ namespace PP_BC_C_H_3_2.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateBook createBook)
         {
-            var validationResult = _createValidator.Validate(new Book
-            {
-                Name = createBook.Name,
-                Email = createBook.Email,
-                AccountNumber = createBook.AccountNumber,
-                Age = createBook.Age
-            });
+            // Validate the CreateBook object
+            var validationResult = _createValidator.Validate(createBook);
 
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
             // Generate a new ID based on the last existing ID
-            int newId = books.Any() ? books.Max(e => e.Id) + 1 : 1;
+            int newId = books.Any() ? books.Max(e => e.BookId) + 1 : 1;
 
             // Map CreateBook to Book
             var book = new Book
             {
-                Id = newId,
-                Name = createBook.Name,
-                Email = createBook.Email,
-                AccountNumber = createBook.AccountNumber,
-                Age = createBook.Age
+                BookId = newId,
+                GenreId = createBook.GenreId,
+                Title = createBook.Title
             };
 
             books.Add(book);
@@ -89,13 +82,12 @@ namespace PP_BC_C_H_3_2.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var existingBook = books.FirstOrDefault(e => e.Id == id);
+            var existingBook = books.FirstOrDefault(e => e.BookId == id);
             if (existingBook == null)
                 return NotFound();
 
-            existingBook.Name = book.Name;
-            existingBook.Email = book.Email;
-            existingBook.Age = book.Age;
+            existingBook.GenreId = book.GenreId;
+            existingBook.Title = book.Title;
 
             return Ok();
         }
@@ -107,7 +99,7 @@ namespace PP_BC_C_H_3_2.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var book = books.FirstOrDefault(e => e.Id == id);
+            var book = books.FirstOrDefault(e => e.BookId == id);
             if (book == null)
                 return NotFound();
 

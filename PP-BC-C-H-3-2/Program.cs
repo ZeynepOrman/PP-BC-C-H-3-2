@@ -26,7 +26,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<GetByIdBookValidator>();
 
 // With this line:
 builder.Services.AddScoped<IValidator<int>, GetByIdBookValidator>();
-// Swagger
+// Swaggerf
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

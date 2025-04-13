@@ -20,12 +20,12 @@ builder.Services.AddControllers();
 
 // FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<GetByIdEmployeeValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<GetByIdBookValidator>();
 // Replace this line:
-//////builder.Services.AddScoped<IValidator<Employee>, GetByIdEmployeeValidator>();
+//////builder.Services.AddScoped<IValidator<Book>, GetByIdBookValidator>();
 
 // With this line:
-builder.Services.AddScoped<IValidator<int>, GetByIdEmployeeValidator>();
+builder.Services.AddScoped<IValidator<int>, GetByIdBookValidator>();
 // Swagger
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
